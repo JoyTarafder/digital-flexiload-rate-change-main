@@ -403,6 +403,14 @@ const style = document.createElement("style");
 style.textContent = shakeKeyframes;
 document.head.appendChild(style);
 
+// Set current year automatically
+document.addEventListener("DOMContentLoaded", function () {
+  const currentYearElement = document.getElementById("currentYear");
+  if (currentYearElement) {
+    currentYearElement.textContent = new Date().getFullYear();
+  }
+});
+
 // Add input event listeners for real-time calculations
 document.addEventListener("DOMContentLoaded", function () {
   const inputs = document.querySelectorAll('input[type="number"]');
