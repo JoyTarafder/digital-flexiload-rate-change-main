@@ -274,6 +274,113 @@
             </div>
           </div>
         </div>
+
+
+        <!-- My GP/ My Banglalink / Bkash / Nagad Pack Card -->
+        <div
+          class="card bg-white shadow-lg sm:shadow-xl border-0 hover:shadow-2xl transition-all duration-300 animate-bounce-in touch-manipulation"
+        >
+          <div class="card-body p-4 sm:p-6 lg:p-8">
+            <div class="flex items-center mb-4 sm:mb-6">
+              <div
+                class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center mr-3 sm:mr-4"
+              >
+                <i class="fas fa-car text-white text-lg sm:text-xl"></i>
+              </div>
+              <div>
+                <h3 class="text-xl sm:text-2xl font-bold text-gray-800">
+                  My GP/ My Banglalink / Bkash / Nagad Pack
+                </h3>
+                <p class="text-sm sm:text-base text-gray-500">
+                  Calculate drive package commission
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-4 sm:space-y-6">
+              <div class="form-control">
+                <label class="label">
+                  <span
+                    class="label-text font-semibold text-gray-700 text-sm sm:text-base"
+                  >
+                    <i class="fas fa-tag mr-2 text-blue-500"></i>
+                    Commission Amount
+                  </span>
+                </label>
+                <input
+                  type="number"
+                  id="buyDriveRate"
+                  placeholder="Enter buy offer amount"
+                  class="input input-bordered input-md sm:input-lg bg-gray-50 border-gray-200 focus:border-blue-500 focus:bg-white transition-all duration-300 text-black text-base sm:text-lg touch-manipulation"
+                  inputmode="numeric"
+                />
+              </div>
+
+              <div class="form-control">
+                <label class="label">
+                  <span
+                    class="label-text font-semibold text-gray-700 text-sm sm:text-base"
+                  >
+                    <i class="fas fa-tag mr-2 text-blue-500"></i>
+                    Regular Amount
+                  </span>
+                </label>
+                <input
+                  type="number"
+                  id="selectRate"
+                  placeholder="Enter rate package amount"
+                  class="input input-bordered input-md sm:input-lg bg-gray-50 border-gray-200 focus:border-blue-500 focus:bg-white transition-all duration-300 text-black text-base sm:text-lg touch-manipulation"
+                  inputmode="numeric"
+                />
+              </div>
+
+              <button
+                class="btn btn-md sm:btn-lg w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white border-0 hover:from-blue-600 hover:to-indigo-600 transition-all duration-300 transform hover:scale-105 touch-manipulation min-h-12 sm:min-h-14"
+                onclick="commission()"
+              >
+                <i class="fas fa-chart-line mr-2"></i>
+                Calculate Commission
+              </button>
+
+              <div class="grid grid-cols-1 gap-3 sm:gap-4">
+                <div
+                  class="bg-gradient-to-r from-blue-50 to-indigo-50 p-3 sm:p-4 rounded-xl border border-blue-200"
+                >
+                  <div class="flex items-center justify-between">
+                    <span
+                      class="text-gray-700 font-semibold text-sm sm:text-base"
+                    >
+                      <i class="fas fa-coins mr-2 text-blue-600"></i>
+                      Commission:
+                    </span>
+                    <span
+                      class="text-lg sm:text-xl font-bold text-blue-600"
+                      id="commission"
+                      >0</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="bg-gradient-to-r from-purple-50 to-pink-50 p-3 sm:p-4 rounded-xl border border-purple-200"
+                >
+                  <div class="flex items-center justify-between">
+                    <span
+                      class="text-gray-700 font-semibold text-sm sm:text-base"
+                    >
+                      <i class="fas fa-mobile-alt mr-2 text-purple-600"></i>
+                      App Rate:
+                    </span>
+                    <span
+                      class="text-lg sm:text-xl font-bold text-purple-600"
+                      id="appRate"
+                      >0</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
 

@@ -77,7 +77,7 @@ function animateValue(element, start, end, duration) {
 
   function update(currentTime) {
     const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
+    const progress = Math.min(elapsed / duration, 0.2);
 
     // Easing function for smooth animation
     const easeOutQuart = 1 - Math.pow(1 - progress, 4);
@@ -170,6 +170,73 @@ function updateCommissionIndicator(commission, element) {
   }
 }
 
+// Reset commission indicator styling
+function resetCommissionIndicator() {
+  const commissionElement = document.getElementById("commission");
+  const appRateElement = document.getElementById("appRate");
+
+  [commissionElement, appRateElement].forEach((element) => {
+    const parent = element.parentElement;
+    parent.classList.remove("from-red-50", "to-red-100", "border-red-200");
+    parent.classList.remove(
+      "from-green-50",
+      "to-green-100",
+      "border-green-200"
+    );
+    parent.classList.remove(
+      "from-yellow-50",
+      "to-yellow-100",
+      "border-yellow-200"
+    );
+    element.classList.remove(
+      "text-red-600",
+      "text-green-600",
+      "text-yellow-600"
+    );
+  });
+}
+
+// Live rate calculation (without animations for smooth real-time updates)
+function rateChangeLive() {
+  const rateInput = document.getElementById("rate");
+  const rateVal = document.getElementById("rate_val");
+  const rate = parseFloat(rateInput.value);
+
+  if (rate && rate > 0) {
+    const calculatedRate = rate + (rate * 0.03 + 7);
+    rateVal.textContent = calculatedRate.toFixed(2);
+  }
+}
+
+// Live commission calculation (without animations for smooth real-time updates)
+function commissionLive() {
+  const buyOfferInput = document.getElementById("buyDriveRate");
+  const selectRateInput = document.getElementById("selectRate");
+  const commissionElement = document.getElementById("commission");
+  const appRateElement = document.getElementById("appRate");
+
+  const buyOffer = parseFloat(buyOfferInput.value);
+  const selectRatePack = parseFloat(selectRateInput.value);
+
+  // Only calculate if both values are valid
+  if (buyOffer && buyOffer > 0 && selectRatePack && selectRatePack > 0) {
+    const appRate = buyOffer + (buyOffer * 0.03 + 7);
+    const calculatedCommission = selectRatePack - appRate;
+
+    appRateElement.textContent = appRate.toFixed(2);
+    commissionElement.textContent = calculatedCommission.toFixed(2);
+
+    // Update color indicator
+    updateCommissionIndicator(calculatedCommission, commissionElement);
+  } else if (buyOffer && buyOffer > 0) {
+    // If only buy offer is entered, show app rate
+    const appRate = buyOffer + (buyOffer * 0.03 + 7);
+    appRateElement.textContent = appRate.toFixed(2);
+    commissionElement.textContent = "0";
+    resetCommissionIndicator();
+  }
+}
+
 // Add shake animation keyframes
 const shakeKeyframes = `
 @keyframes shake {
@@ -184,7 +251,7 @@ const style = document.createElement("style");
 style.textContent = shakeKeyframes;
 document.head.appendChild(style);
 
-// Add input event listeners for real-time validation
+// Add input event listeners for real-time calculations
 document.addEventListener("DOMContentLoaded", function () {
   const inputs = document.querySelectorAll('input[type="number"]');
 
@@ -192,6 +259,23 @@ document.addEventListener("DOMContentLoaded", function () {
     input.addEventListener("input", function () {
       if (this.value && parseFloat(this.value) > 0) {
         clearError(this);
+
+        // Trigger live calculations based on input field
+        if (this.id === "rate") {
+          rateChangeLive();
+        } else if (this.id === "buyDriveRate" || this.id === "selectRate") {
+          commissionLive();
+        }
+      } else {
+        // Clear results when input is empty or invalid
+        if (this.id === "rate") {
+          document.getElementById("rate_val").textContent = "0";
+        } else if (this.id === "buyDriveRate" || this.id === "selectRate") {
+          document.getElementById("commission").textContent = "0";
+          document.getElementById("appRate").textContent = "0";
+          // Reset commission indicator styling
+          resetCommissionIndicator();
+        }
       }
     });
 
