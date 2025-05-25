@@ -237,6 +237,158 @@ function commissionLive() {
   }
 }
 
+// Special commission calculation with animations (for My GP/Banglalink/Bkash/Nagad)
+function specialCommission() {
+  const buyOfferInput = document.getElementById("buySpecialRate");
+  const selectRateInput = document.getElementById("selectSpecialRate");
+  const commissionElement = document.getElementById("specialCommission");
+  const appRateElement = document.getElementById("specialAppRate");
+
+  const commissionAmount = parseFloat(buyOfferInput.value);
+  const regularAmount = parseFloat(selectRateInput.value);
+
+  // Input validation
+  if (!commissionAmount || commissionAmount <= 0) {
+    showError(buyOfferInput, "Please enter a valid commission amount");
+    return;
+  }
+
+  if (!regularAmount || regularAmount <= 0) {
+    showError(selectRateInput, "Please enter a valid regular amount");
+    return;
+  }
+
+  // Clear any previous errors
+  clearError(buyOfferInput);
+  clearError(selectRateInput);
+
+  // Calculate values using new formulas
+  // Step 1: Calculate difference
+  const difference = regularAmount - commissionAmount;
+
+  // Step 2: App Rate = difference + (difference * 3%) + 7
+  const appRate = difference + difference * 0.03 + 7;
+
+  // Step 3: Commission = Regular Amount - App Rate
+  const calculatedCommission = regularAmount - appRate;
+
+  // Animate the results
+  animateValue(commissionElement, 0, calculatedCommission, 800);
+  animateValue(appRateElement, 0, appRate, 800);
+
+  // Add success animations
+  commissionElement.parentElement.classList.add("success-animate");
+  appRateElement.parentElement.classList.add("success-animate");
+
+  setTimeout(() => {
+    commissionElement.parentElement.classList.remove("success-animate");
+    appRateElement.parentElement.classList.remove("success-animate");
+  }, 300);
+
+  // Show profit/loss indicator
+  updateSpecialCommissionIndicator(calculatedCommission, commissionElement);
+}
+
+// Live special commission calculation
+function specialCommissionLive() {
+  const buyOfferInput = document.getElementById("buySpecialRate");
+  const selectRateInput = document.getElementById("selectSpecialRate");
+  const commissionElement = document.getElementById("specialCommission");
+  const appRateElement = document.getElementById("specialAppRate");
+
+  const commissionAmount = parseFloat(buyOfferInput.value);
+  const regularAmount = parseFloat(selectRateInput.value);
+
+  // Only calculate if both values are valid
+  if (
+    commissionAmount &&
+    commissionAmount > 0 &&
+    regularAmount &&
+    regularAmount > 0
+  ) {
+    // Step 1: Calculate difference
+    const difference = regularAmount - commissionAmount;
+
+    // Step 2: App Rate = difference + (difference * 3%) + 7
+    const appRate = difference + difference * 0.03 + 7;
+
+    // Step 3: Commission = Regular Amount - App Rate
+    const calculatedCommission = regularAmount - appRate;
+
+    appRateElement.textContent = appRate.toFixed(2);
+    commissionElement.textContent = calculatedCommission.toFixed(2);
+
+    // Update color indicator
+    updateSpecialCommissionIndicator(calculatedCommission, commissionElement);
+  } else {
+    // Reset values if inputs are invalid
+    appRateElement.textContent = "0";
+    commissionElement.textContent = "0";
+    resetSpecialCommissionIndicator();
+  }
+}
+
+// Update special commission indicator with color coding
+function updateSpecialCommissionIndicator(commission, element) {
+  const parent = element.parentElement;
+
+  // Remove existing classes
+  parent.classList.remove("from-red-50", "to-red-100", "border-red-200");
+  parent.classList.remove("from-green-50", "to-green-100", "border-green-200");
+  parent.classList.remove(
+    "from-yellow-50",
+    "to-yellow-100",
+    "border-yellow-200"
+  );
+
+  if (commission > 0) {
+    // Profit - Green
+    parent.classList.add("from-green-50", "to-green-100", "border-green-200");
+    element.classList.remove("text-red-600", "text-yellow-600");
+    element.classList.add("text-green-600");
+  } else if (commission < 0) {
+    // Loss - Red
+    parent.classList.add("from-red-50", "to-red-100", "border-red-200");
+    element.classList.remove("text-green-600", "text-yellow-600");
+    element.classList.add("text-red-600");
+  } else {
+    // Break-even - Yellow
+    parent.classList.add(
+      "from-yellow-50",
+      "to-yellow-100",
+      "border-yellow-200"
+    );
+    element.classList.remove("text-green-600", "text-red-600");
+    element.classList.add("text-yellow-600");
+  }
+}
+
+// Reset special commission indicator styling
+function resetSpecialCommissionIndicator() {
+  const commissionElement = document.getElementById("specialCommission");
+  const appRateElement = document.getElementById("specialAppRate");
+
+  [commissionElement, appRateElement].forEach((element) => {
+    const parent = element.parentElement;
+    parent.classList.remove("from-red-50", "to-red-100", "border-red-200");
+    parent.classList.remove(
+      "from-green-50",
+      "to-green-100",
+      "border-green-200"
+    );
+    parent.classList.remove(
+      "from-yellow-50",
+      "to-yellow-100",
+      "border-yellow-200"
+    );
+    element.classList.remove(
+      "text-red-600",
+      "text-green-600",
+      "text-yellow-600"
+    );
+  });
+}
+
 // Add shake animation keyframes
 const shakeKeyframes = `
 @keyframes shake {
@@ -265,6 +417,11 @@ document.addEventListener("DOMContentLoaded", function () {
           rateChangeLive();
         } else if (this.id === "buyDriveRate" || this.id === "selectRate") {
           commissionLive();
+        } else if (
+          this.id === "buySpecialRate" ||
+          this.id === "selectSpecialRate"
+        ) {
+          specialCommissionLive();
         }
       } else {
         // Clear results when input is empty or invalid
@@ -275,6 +432,14 @@ document.addEventListener("DOMContentLoaded", function () {
           document.getElementById("appRate").textContent = "0";
           // Reset commission indicator styling
           resetCommissionIndicator();
+        } else if (
+          this.id === "buySpecialRate" ||
+          this.id === "selectSpecialRate"
+        ) {
+          document.getElementById("specialCommission").textContent = "0";
+          document.getElementById("specialAppRate").textContent = "0";
+          // Reset special commission indicator styling
+          resetSpecialCommissionIndicator();
         }
       }
     });
@@ -286,6 +451,11 @@ document.addEventListener("DOMContentLoaded", function () {
           rateChange();
         } else if (this.id === "buyDriveRate" || this.id === "selectRate") {
           commission();
+        } else if (
+          this.id === "buySpecialRate" ||
+          this.id === "selectSpecialRate"
+        ) {
+          specialCommission();
         }
       }
     });
@@ -315,17 +485,25 @@ function copyToClipboard(text, element) {
 
 // Make result values clickable to copy
 document.addEventListener("DOMContentLoaded", function () {
-  const resultElements = ["rate_val", "commission", "appRate"];
+  const resultElements = [
+    "rate_val",
+    "commission",
+    "appRate",
+    "specialCommission",
+    "specialAppRate",
+  ];
 
   resultElements.forEach((id) => {
     const element = document.getElementById(id);
-    element.style.cursor = "pointer";
-    element.title = "Click to copy";
+    if (element) {
+      element.style.cursor = "pointer";
+      element.title = "Click to copy";
 
-    element.addEventListener("click", function () {
-      if (this.textContent !== "0") {
-        copyToClipboard(this.textContent, this);
-      }
-    });
+      element.addEventListener("click", function () {
+        if (this.textContent !== "0") {
+          copyToClipboard(this.textContent, this);
+        }
+      });
+    }
   });
 });
