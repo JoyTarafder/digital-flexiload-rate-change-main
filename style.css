@@ -315,7 +315,11 @@
   }
 
   /* Better tap targets */
-  a, button, input, select, textarea {
+  a,
+  button,
+  input,
+  select,
+  textarea {
     min-height: 44px;
     min-width: 44px;
   }
